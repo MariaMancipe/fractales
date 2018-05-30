@@ -3,8 +3,8 @@
 var cubeRotation = 0.0;
 var sphere = {smoothness: 30, size: 1, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
 var cylinder = {smoothness: 30, size: 5, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
-var fractal = {depth: 7, branches: 2};
-var position = [0,-30,-50];
+var fractal = {depth: 3, branches: 2};
+var position = [0,-10,-50];
 var rotation = [0.0, 1.0, 0];
 
 function setFractalAttributes() {
@@ -378,7 +378,7 @@ function drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, mod
             var matriz = mat4.create();
             mat4.copy(matriz, modelViewMatrix);
             mat4.rotate(matriz,matriz, Math.PI/branches,[-1+((2/(branches-1))*i), 1, -1+((2/(branches-1))*i)]);
-            drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, depth-1, branches);
+            drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, depth-1, branches+1);
         }
     }
     else{
