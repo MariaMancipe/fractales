@@ -9,6 +9,10 @@ body{
 .input-parameter{
     width: 215px;
 }
+.grey{
+    background-color: rgba(156,156,156,1);
+    border-color: rgba(156,156,156,1);
+}
 .fractals{
     background-color: rgba(23,70,138,1);
     border-color: rgba(54,70,138,1);
