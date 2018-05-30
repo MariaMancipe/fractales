@@ -405,16 +405,10 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
     mat4.perspective(projectionMatrix,fieldOfView,aspect,zNear, zFar);
     const modelViewMatrix = mat4.create();
 
-    // mat4.translate(modelViewMatrix, modelViewMatrix, position);  // amount to translate
-    // mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, rotation);
-    // drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, fractal.depth, fractal.branches);
+    mat4.translate(modelViewMatrix, modelViewMatrix, position);  // amount to translate
+    mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, rotation);
+    drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, fractal.depth, fractal.branches);
 
-    for(var i=0; i<5; i++){
-        var matriz = mat4.create();
-        mat4.copy(matriz, modelViewMatrix)
-        mat4.translate(matriz, matriz, [i*10,0,i*10]);
-        drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, fractal.depth, fractal.branches);
-    }
 
 
     cubeRotation += deltaTime;
