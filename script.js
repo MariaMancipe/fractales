@@ -1,3 +1,8 @@
+
+function CanvasController($scope) {
+
+};
+
 var cubeRotation = 0.0;
 var smoothness = {cylinder: 30, sphere: 30};
 var size = {cylinder: 5, sphere: 1};
@@ -6,7 +11,8 @@ var colors = {
     cylinder: {random:true, r: 0, g:0, b: 0, a: 1},
     sphere: {random:true, r: 0, g:0, b: 0, a: 1}
 };
-var position = [-100,-10,-100];
+var position = [0,-10,-50];
+var rotation = [0.0, 1.0, 0];
 main();
 
 function main() {
@@ -18,24 +24,20 @@ function main() {
         return;
     }
 
-    const vsSource = `
-    attribute vec4 aVertexPosition;
-    attribute vec4 aVertexColor;
-    uniform mat4 uModelViewMatrix;
-    uniform mat4 uProjectionMatrix;
-    varying lowp vec4 vColor;
-    void main(void) {
-      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-      vColor = aVertexColor;
-    }
-  `;
+    const vsSource = 'attribute vec4 aVertexPosition;' +
+        'attribute vec4 aVertexColor;' +
+        'uniform mat4 uModelViewMatrix;' +
+        'uniform mat4 uProjectionMatrix;' +
+        'varying lowp vec4 vColor;' +
+        'void main(void) {' +
+        '   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;' +
+        'vColor = aVertexColor;' +
+        '}';
 
-    const fsSource = `
-    varying lowp vec4 vColor;
-    void main(void) {
-      gl_FragColor = vColor;
-    }
-  `;
+    const fsSource = 'varying lowp vec4 vColor; ' +
+        'void main(void) {\n' +
+        '      gl_FragColor = vColor;\n' +
+        '    }';
 
     const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
 
@@ -263,35 +265,52 @@ function drawSphere(gl, programInfo, buffers, deltaTime, projectionMatrix, model
         gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
     }
 }
-
-function drawBranchOne(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth){
-    drawCylinder(gl, programInfo, buffers.cylinder, deltaTime, projectionMatrix, modelViewMatrix);
-    mat4.scale(modelViewMatrix, modelViewMatrix,[0.75,0.75,0.75]);
-    mat4.translate(modelViewMatrix, modelViewMatrix, [0, 5.25, 0]);
-    if(depth>0) {
-        drawSphere(gl, programInfo, buffers.sphere, deltaTime, projectionMatrix, modelViewMatrix);
-        mat4.translate(modelViewMatrix, modelViewMatrix, [0, 0.75, 0]);
-        mat4.rotate(modelViewMatrix, modelViewMatrix, Math.PI/2,[-1, 1, 1]);
-        drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth-1);
+function translate(split, matrix, vector){
+    if(split){
+        var newMatrix = mat4.create();
+        mat4.copy(newMatrix, matrix);
+        mat4.translate(newMatrix,newMatrix, vector);
+        return newMatrix;
+    }else{
+        mat4.translate(matrix, matrix, vector);
+        return matrix;
     }
-    else{
-        drawSphere(gl, programInfo, buffers.sphere, deltaTime, projectionMatrix, modelViewMatrix);
+}
+
+function rotate(split, matrix, angle, vector){
+    if(split){
+        var newMatrix = mat4.create();
+        mat4.copy(newMatrix, matrix);
+        mat4.rotate(newMatrix,newMatrix, angle,  vector);
+        return newMatrix;
+    }else{
+        mat4.rotate(matrix, matrix, angle, vector);
+        return matrix;
+    }
+}
+
+function scale(split, matrix, vector){
+    if(split){
+        var newMatrix = mat4.create();
+        mat4.copy(newMatrix, matrix);
+        mat4.scale(newMatrix,newMatrix, vector);
+        return newMatrix;
+    }else{
+        mat4.scale(matrix, matrix, vector);
+        return matrix;
     }
 }
 
 function drawBranchTwo(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches){
     drawCylinder(gl, programInfo, buffers.cylinder, deltaTime, projectionMatrix, modelViewMatrix);
     mat4.scale(modelViewMatrix, modelViewMatrix,[0.75,0.75,0.75]);
+    //translate(false, modelViewMatrix, modelViewMatrix, [0, 5.25, 0]);
     mat4.translate(modelViewMatrix, modelViewMatrix, [0, 5.25, 0]);
     if(depth>0) {
         drawSphere(gl, programInfo, buffers.sphere, deltaTime, projectionMatrix, modelViewMatrix);
-        mat4.translate(modelViewMatrix, modelViewMatrix, [0, 0.75, 0]);
-        var rama1 = mat4.create();
-        var rama2 = mat4.create();
-        mat4.copy(rama1, modelViewMatrix);
-        mat4.copy(rama2, modelViewMatrix);
-        mat4.rotate(rama1, rama1, Math.PI/2,[-1, 1, 1]);
-        mat4.rotate(rama2, rama2, Math.PI/2,[1, 1, -1]);
+        translate(false, modelViewMatrix, modelViewMatrix, [0, 0.75, 0]);
+        var rama1 = rotate(true, modelViewMatrix, Math.PI/2,[-1, 1, 1] );
+        var rama2 = rotate(true, modelViewMatrix, Math.PI/2,[1, 1, -1] );
         drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, rama1, depth-1, branches);
         drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, rama2, depth-1, branches);
     }
@@ -339,14 +358,15 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
     mat4.perspective(projectionMatrix,fieldOfView,aspect,zNear, zFar);
     const modelViewMatrix = mat4.create();
     mat4.translate(modelViewMatrix, modelViewMatrix, position);  // amount to translate
-    mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, [0.0, 1.0, 0]);
+    mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, rotation);
+    drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, fractal.depth, fractal.branches);
 
-    for(var i=0; i<20; i++){
-        var matriz = mat4.create();
-        mat4.copy(matriz, modelViewMatrix)
-        mat4.translate(matriz, matriz, [i*10,0,i*10]);
-        drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, fractal.depth, fractal.branches);
-    }
+    // for(var i=0; i<20; i++){
+    //     var matriz = mat4.create();
+    //     mat4.copy(matriz, modelViewMatrix)
+    //     mat4.translate(matriz, matriz, [i*10,0,i*10]);
+    //     drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, fractal.depth, fractal.branches);
+    // }
 
 
     cubeRotation += deltaTime;

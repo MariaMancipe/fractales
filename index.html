@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <title>Fractals</title>
     <script src="https://rawgit.com/mdn/webgl-examples/gh-pages/tutorial/gl-matrix.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 
 </head>
-<body>
-    <div style="width: 1500px; height: 768px; background-color: #000;">
+<body ng-app ng-controller="CanvasController">
+
         <canvas id="glcanvas" width="1000px" height="768px"></canvas>
-        <div class="botones" style="float:right;">
+        <div class="botones" style="float:right;" >
             <input type="text" id="rAmbient" class="input-parameter" placeholder="Input value for Red" value="0.1">
             <input type="text" id="gAmbient" class="input-parameter" placeholder="Input value for Green" value="0.1">
             <input type="text" id="bAmbient" class="input-parameter" placeholder="Input value for Blue" value="0.1">
             <button class="botones fps" onclick="setAmbientLight()"> Set Fractal Attributes </button>
         </div>
-    </div>
     <script src="script.js?v=1"></script>
 </body>
 </html>
