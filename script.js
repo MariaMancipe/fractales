@@ -3,8 +3,8 @@
 var cubeRotation = 0.0;
 var sphere = {smoothness: 30, size: 1, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
 var cylinder = {smoothness: 30, size: 5, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
-var fractal = {depth: 5, branches: 2};
-var position = [0,-10,-50];
+var fractal = {depth: 7, branches: 2};
+var position = [0,-30,-50];
 var rotation = [0.0, 1.0, 0];
 
 function setFractalAttributes() {
@@ -19,10 +19,10 @@ function setSphereAttributes() {
         smoothness: parseInt(document.getElementById("sphereSmoothness").value),
         size: parseInt(document.getElementById("sphereRadius").value),
         colors:{
-            random:true,
-            r: parseInt(document.getElementById("sphereR").value),
-            g: parseInt(document.getElementById("sphereG").value),
-            b: parseInt(document.getElementById("sphereB").value),
+            random:false,
+            r: parseInt(document.getElementById("sphereR").value)/256,
+            g: parseInt(document.getElementById("sphereG").value)/256,
+            b: parseInt(document.getElementById("sphereB").value)/256,
             a: 1
         }
     };
@@ -33,10 +33,10 @@ function setCylinderAttributes() {
         smoothness: parseInt(document.getElementById("cylinderSmoothness").value),
         size: parseInt(document.getElementById("cylinderHeight").value),
         colors:{
-            random:true,
-            r: parseInt(document.getElementById("cylinderR").value),
-            g: parseInt(document.getElementById("cylinderG").value),
-            b: parseInt(document.getElementById("cylinderB").value),
+            random:false,
+            r: parseInt(document.getElementById("cylinderR").value)/256,
+            g: parseInt(document.getElementById("cylinderG").value)/256,
+            b: parseInt(document.getElementById("cylinderB").value)/256,
             a: 1
         }
     };
@@ -144,9 +144,9 @@ function addPositionsCylinder(segments, height, colors){
         var x =  Math.cos(theta*i);
         var z =  Math.sin(theta*i);
         if(colors.random){
-            colors.r = (Math.floor(Math.random()*255)+1)/256;
-            colors.g = (Math.floor(Math.random()*255)+1)/256;
-            colors.b =(Math.floor(Math.random()*255)+1)/256;
+            colors.r = (Math.floor(Math.random()*128)+0)/256;
+            colors.g = (Math.floor(Math.random()*204)+203)/256;
+            colors.b =(Math.floor(Math.random()*102)+0)/256;
             colors.a = 1.0;
         }
 
@@ -179,9 +179,9 @@ function addPositionsColorsSphere(smoothness, radius, colors)
 
 
             if(colors.random){
-                colors.r = (Math.floor(Math.random()*255)+1)/256;
-                colors.g = (Math.floor(Math.random()*255)+1)/256;
-                colors.b =(Math.floor(Math.random()*255)+1)/256;
+                colors.r = (Math.floor(Math.random()*153)+152)/256;
+                colors.g = (Math.floor(Math.random()*204)+153)/256;
+                colors.b =(Math.floor(Math.random()*255)+254)/256;
                 colors.a = 1.0;
             }
             positions.push(x*radius, y*radius, z*radius, colors.r, colors.g, colors.b, colors.a);
@@ -368,16 +368,16 @@ function drawBranchTwo(gl, programInfo, buffers, deltaTime, projectionMatrix, mo
 
 function drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches){
     drawCylinder(gl, programInfo, buffers.cylinder, deltaTime, projectionMatrix, modelViewMatrix);
-    mat4.scale(modelViewMatrix, modelViewMatrix,[0.75,0.75,0.75]);
-    mat4.translate(modelViewMatrix, modelViewMatrix, [0, buffers.cylinder, 0]);
+    mat4.scale(modelViewMatrix, modelViewMatrix,[0.9,0.9,0.9]);
+    mat4.translate(modelViewMatrix, modelViewMatrix, [0, cylinder.size+sphere.size/4, 0]);
+
     if(depth>0) {
         drawSphere(gl, programInfo, buffers.sphere, deltaTime, projectionMatrix, modelViewMatrix);
-        mat4.translate(modelViewMatrix, modelViewMatrix, [0, buffers.sphere, 0]);
+        translate(false, modelViewMatrix, modelViewMatrix, [0, sphere.size, 0]);
         for(var i = 0; i<branches; i++){
             var matriz = mat4.create();
             mat4.copy(matriz, modelViewMatrix);
-
-            mat4.rotate(matriz,matriz, Math.PI/branches,[-1+((2/branches)*i), 1, 1-((2/branches)*i)]);
+            mat4.rotate(matriz,matriz, Math.PI/branches,[-1+((2/(branches-1))*i), 1, -1+((2/(branches-1))*i)]);
             drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, depth-1, branches);
         }
     }
@@ -388,8 +388,8 @@ function drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, mod
 
 
 function drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches){
-    //drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches);
-    drawBranchTwo(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches)
+    drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches);
+    //drawBranchTwo(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches)
 }
 
 
@@ -404,16 +404,17 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
 
     mat4.perspective(projectionMatrix,fieldOfView,aspect,zNear, zFar);
     const modelViewMatrix = mat4.create();
-    mat4.translate(modelViewMatrix, modelViewMatrix, position);  // amount to translate
-    mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, rotation);
-    drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, fractal.depth, fractal.branches);
 
-    // for(var i=0; i<20; i++){
-    //     var matriz = mat4.create();
-    //     mat4.copy(matriz, modelViewMatrix)
-    //     mat4.translate(matriz, matriz, [i*10,0,i*10]);
-    //     drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, fractal.depth, fractal.branches);
-    // }
+    // mat4.translate(modelViewMatrix, modelViewMatrix, position);  // amount to translate
+    // mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, rotation);
+    // drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, fractal.depth, fractal.branches);
+
+    for(var i=0; i<5; i++){
+        var matriz = mat4.create();
+        mat4.copy(matriz, modelViewMatrix)
+        mat4.translate(matriz, matriz, [i*10,0,i*10]);
+        drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, fractal.depth, fractal.branches);
+    }
 
 
     cubeRotation += deltaTime;
