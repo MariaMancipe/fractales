@@ -6,7 +6,7 @@ var colors = {
     cylinder: {random:true, r: 0, g:0, b: 0, a: 1},
     sphere: {random:true, r: 0, g:0, b: 0, a: 1}
 };
-var position = [0,-10,-30];
+var position = [-100,-10,-100];
 main();
 
 function main() {
@@ -341,7 +341,13 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
     mat4.translate(modelViewMatrix, modelViewMatrix, position);  // amount to translate
     mat4.rotate(modelViewMatrix,  modelViewMatrix,   cubeRotation*.7, [0.0, 1.0, 0]);
 
-    drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, fractal.depth, fractal.branches);
+    for(var i=0; i<20; i++){
+        var matriz = mat4.create();
+        mat4.copy(matriz, modelViewMatrix)
+        mat4.translate(matriz, matriz, [i*10,0,i*10]);
+        drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, fractal.depth, fractal.branches);
+    }
+
 
     cubeRotation += deltaTime;
 }
