@@ -350,12 +350,12 @@ function scale(split, matrix, vector){
 
 function drawBranchTwo(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches){
     drawCylinder(gl, programInfo, buffers.cylinder, deltaTime, projectionMatrix, modelViewMatrix);
-    mat4.scale(modelViewMatrix, modelViewMatrix,[0.75,0.75,0.75]);
+    //mat4.scale(modelViewMatrix, modelViewMatrix,[0.75,0.75,0.75]);
     //translate(false, modelViewMatrix, modelViewMatrix, [0, 5.25, 0]);
-    mat4.translate(modelViewMatrix, modelViewMatrix, [0, 5.25, 0]);
+    mat4.translate(modelViewMatrix, modelViewMatrix, [0, cylinder.size+sphere.size/4, 0]);
     if(depth>0) {
         drawSphere(gl, programInfo, buffers.sphere, deltaTime, projectionMatrix, modelViewMatrix);
-        translate(false, modelViewMatrix, modelViewMatrix, [0, 0.75, 0]);
+        translate(false, modelViewMatrix, modelViewMatrix, [0, sphere.size, 0]);
         var rama1 = rotate(true, modelViewMatrix, Math.PI/2,[-1, 1, 1] );
         var rama2 = rotate(true, modelViewMatrix, Math.PI/2,[1, 1, -1] );
         drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, rama1, depth-1, branches);
@@ -369,10 +369,10 @@ function drawBranchTwo(gl, programInfo, buffers, deltaTime, projectionMatrix, mo
 function drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, modelViewMatrix, depth, branches){
     drawCylinder(gl, programInfo, buffers.cylinder, deltaTime, projectionMatrix, modelViewMatrix);
     mat4.scale(modelViewMatrix, modelViewMatrix,[0.75,0.75,0.75]);
-    mat4.translate(modelViewMatrix, modelViewMatrix, [0, 5.25, 0]);
+    mat4.translate(modelViewMatrix, modelViewMatrix, [0, buffers.cylinder, 0]);
     if(depth>0) {
         drawSphere(gl, programInfo, buffers.sphere, deltaTime, projectionMatrix, modelViewMatrix);
-        mat4.translate(modelViewMatrix, modelViewMatrix, [0, 0.75, 0]);
+        mat4.translate(modelViewMatrix, modelViewMatrix, [0, buffers.sphere, 0]);
         for(var i = 0; i<branches; i++){
             var matriz = mat4.create();
             mat4.copy(matriz, modelViewMatrix);
