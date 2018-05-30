@@ -1,9 +1,9 @@
 
 
 var cubeRotation = 0.0;
-var sphere = {smoothness: 30, size: 1, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
-var cylinder = {smoothness: 30, size: 5, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
-var fractal = {depth: 3, branches: 2};
+var sphere = {smoothness: 30, size: 2, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
+var cylinder = {smoothness: 30, size: 7, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
+var fractal = {depth: 5, branches: 2};
 var position = [0,-10,-50];
 var rotation = [0.0, 1.0, 0];
 
@@ -144,9 +144,9 @@ function addPositionsCylinder(segments, height, colors){
         var x =  Math.cos(theta*i);
         var z =  Math.sin(theta*i);
         if(colors.random){
-            colors.r = (Math.floor(Math.random()*128)+0)/256;
-            colors.g = (Math.floor(Math.random()*204)+203)/256;
-            colors.b =(Math.floor(Math.random()*102)+0)/256;
+            colors.r = (Math.floor(Math.random()*2)+1)/256;
+            colors.g = (Math.floor(Math.random()*2)+1)/256;
+            colors.b =(Math.floor(Math.random()*128)+64)/256;
             colors.a = 1.0;
         }
 
@@ -179,8 +179,8 @@ function addPositionsColorsSphere(smoothness, radius, colors)
 
 
             if(colors.random){
-                colors.r = (Math.floor(Math.random()*153)+152)/256;
-                colors.g = (Math.floor(Math.random()*204)+153)/256;
+                colors.r = (Math.floor(Math.random()*192)+64)/256;
+                colors.g = (Math.floor(Math.random()*192)+64)/256;
                 colors.b =(Math.floor(Math.random()*255)+254)/256;
                 colors.a = 1.0;
             }
@@ -377,8 +377,8 @@ function drawBranches(gl, programInfo, buffers, deltaTime, projectionMatrix, mod
         for(var i = 0; i<branches; i++){
             var matriz = mat4.create();
             mat4.copy(matriz, modelViewMatrix);
-            mat4.rotate(matriz,matriz, Math.PI/branches,[-1+((2/(branches-1))*i), 1, -1+((2/(branches-1))*i)]);
-            drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, depth-1, branches+1);
+            mat4.rotate(matriz,matriz, Math.PI/branches,[1-((2/(branches-1))*i), 1, -1+((2/(branches-1))*i)]);
+            drawTrunk(gl, programInfo, buffers, deltaTime, projectionMatrix, matriz, depth-1, branches);
         }
     }
     else{
