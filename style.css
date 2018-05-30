@@ -1,0 +1,27 @@
+.botones{
+    font-size:20px;
+    color:#fff;
+    width: 200px;
+}
+.input-parameter{
+    width: 195px;
+}
+.ls{
+    background-color: rgba(23,70,138,1);
+    border-color: rgba(54,70,138,1);
+}
+.fps {
+    background-color: rgba(120,229,235,1);
+    border-color: rgba(120,229,235,1);
+}
+.tps {
+    background-color: rgba(76,141,235,1); border-color: rgba(76,141,235,1);
+}
+.perspective{
+    background-color: rgba(54,90,172,1);
+    border-color: rgba(54,90,172,1);
+}
+.orthogonal{
+    background-color: rgba(225,45,83,1);
+    border-color: rgba(225,45,83,1);
+}
