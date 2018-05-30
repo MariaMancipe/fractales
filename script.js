@@ -1,18 +1,65 @@
 
-function CanvasController($scope) {
-
-};
 
 var cubeRotation = 0.0;
-var smoothness = {cylinder: 30, sphere: 30};
-var size = {cylinder: 5, sphere: 1};
+var sphere = {smoothness: 30, size: 1, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
+var cylinder = {smoothness: 30, size: 5, colors:{random:true, r: 0, g:0, b: 0, a: 1}};
 var fractal = {depth: 5, branches: 2};
-var colors = {
-    cylinder: {random:true, r: 0, g:0, b: 0, a: 1},
-    sphere: {random:true, r: 0, g:0, b: 0, a: 1}
-};
 var position = [0,-10,-50];
 var rotation = [0.0, 1.0, 0];
+
+function setFractalAttributes() {
+    fractal = {
+        depth: parseInt(document.getElementById("fractalDepth").value),
+        branches: parseInt(document.getElementById("fractalBranches").value)
+    };
+    main();
+};
+function setSphereAttributes() {
+   sphere = {
+        smoothness: parseInt(document.getElementById("sphereSmoothness").value),
+        size: parseInt(document.getElementById("sphereRadius").value),
+        colors:{
+            random:true,
+            r: parseInt(document.getElementById("sphereR").value),
+            g: parseInt(document.getElementById("sphereG").value),
+            b: parseInt(document.getElementById("sphereB").value),
+            a: 1
+        }
+    };
+   main();
+};
+function setCylinderAttributes() {
+    cylinder = {
+        smoothness: parseInt(document.getElementById("cylinderSmoothness").value),
+        size: parseInt(document.getElementById("cylinderHeight").value),
+        colors:{
+            random:true,
+            r: parseInt(document.getElementById("cylinderR").value),
+            g: parseInt(document.getElementById("cylinderG").value),
+            b: parseInt(document.getElementById("cylinderB").value),
+            a: 1
+        }
+    };
+    main();
+};
+function setPosition() {
+    position=[
+        parseInt(document.getElementById("posX").value),
+        parseInt(document.getElementById("posY").value),
+        parseInt(document.getElementById("posZ").value),
+    ];
+    main();
+};
+function setRotation() {
+    rotation=[
+        parseInt(document.getElementById("rotX").value),
+        parseInt(document.getElementById("rotY").value),
+        parseInt(document.getElementById("rotZ").value),
+    ];
+    main();
+};
+
+
 main();
 
 function main() {
@@ -54,8 +101,8 @@ function main() {
     };
 
     var arrays = {
-        sphere : addPositionsColorsSphere(smoothness.sphere,  size.sphere, colors.sphere),
-        cylinder : addPositionsCylinder(smoothness.cylinder, size.cylinder, colors.cylinder)
+        sphere : addPositionsColorsSphere(sphere.smoothness,  sphere.size, sphere.colors),
+        cylinder : addPositionsCylinder(cylinder.smoothness, cylinder.size, cylinder.colors)
     };
 
     var buffers = {

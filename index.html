@@ -3,20 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Fractals</title>
+
     <script src="https://rawgit.com/mdn/webgl-examples/gh-pages/tutorial/gl-matrix.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 
 </head>
-<body ng-app ng-controller="CanvasController">
+<body>
 
         <canvas id="glcanvas" width="1000px" height="768px"></canvas>
         <div class="botones" style="float:right;" >
-            <input type="text" id="rAmbient" class="input-parameter" placeholder="Input value for Red" value="0.1">
-            <input type="text" id="gAmbient" class="input-parameter" placeholder="Input value for Green" value="0.1">
-            <input type="text" id="bAmbient" class="input-parameter" placeholder="Input value for Blue" value="0.1">
-            <button class="botones fps" onclick="setAmbientLight()"> Set Fractal Attributes </button>
+            <input type="text" id="fractalDepth" class="input-parameter" placeholder="Fractal Depth" value="5">
+            <input type="text" id="fractalBranches" class="input-parameter" placeholder="Fractal Branches" value="2">
+            <textarea id="fractalInstructions" class="input-parameter" placeholder="insert fractal instructions" rows="6"></textarea>
+            <button class="fractals" onclick="setFractalAttributes()"> Set Fractal Attributes </button>
+            <br>
+            <input type="text" id="sphereSmoothness" class="input-parameter" placeholder="Smoothness value for spheres" value="">
+            <input type="text" id="sphereRadius" class="input-parameter" placeholder="Radius value for spheres" value="">
+            <input type="text" id="sphereR" class="input-parameter" placeholder="Red value for spheres" value="">
+            <input type="text" id="sphereG" class="input-parameter" placeholder="Green value for spheres" value="">
+            <input type="text" id="sphereB" class="input-parameter" placeholder="Blue value for spheres" value="">
+            <button class="spheres" onclick="setSphereAtributes()"> Set Sphere Attributes </button>
+            <br>
+            <input type="text" id="cylinderSmoothness" class="input-parameter" placeholder="Smoothness value for cylinders" value="">
+            <input type="text" id="cylinderHeight" class="input-parameter" placeholder="Height value for cylinders" value="">
+            <input type="text" id="cylinderR" class="input-parameter" placeholder="Red value for cylinders" value="">
+            <input type="text" id="cylinderG" class="input-parameter" placeholder="Green value for cylinders" value="">
+            <input type="text" id="cylinderB" class="input-parameter" placeholder="Blue value for cylinders" value="">
+            <button class="cylinders" onclick="setCylinderAtributes()"> Set Cylinder Attributes </button>
+            <br>
+            <input type="text" id="posX" class="input-parameter" placeholder="X value" value="">
+            <input type="text" id="posY" class="input-parameter" placeholder="Y value" value="">
+            <input type="text" id="posZ" class="input-parameter" placeholder="Z value" value="">
+            <button class="position" onclick="setPosition()"> Set Initial Position </button>
+            <br>
+            <input type="text" id="rotX" class="input-parameter" placeholder="X value" value="">
+            <input type="text" id="rotY" class="input-parameter" placeholder="Y value" value="">
+            <input type="text" id="rotZ" class="input-parameter" placeholder="Z value" value="">
+            <button class="rotation" onclick="setRotation()"> Set Initial Rotation Axis </button>
         </div>
+
     <script src="script.js?v=1"></script>
 </body>
 </html>
